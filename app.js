@@ -20,7 +20,13 @@ client.connect(function(err){
   const db = client.db(dbName);
 
   // do Database ops here and close the connection
-  insertDocuments(db, function(){
+  // NOTE: Comment one while using the other for this demo
+  // 1. Insert documents
+  // insertDocuments(db, function(){
+  //   client.close();
+  // });
+  // 2. Find documents
+  findDocuments(db, function(){
     client.close();
   });
 });
@@ -58,5 +64,20 @@ const insertDocuments = function(db, callback){
     // assert.equal(3, result.ops.length);
     console.log("Inserted 3 documents.")
     callback(result);
+  });
+};
+
+// Read from the Database
+const findDocuments = function(db, callback){
+  // get document collection
+  const collection = db.collection('fruits');
+  collection.find({}).toArray(function(err, fruits){
+    // check if error is null
+    assert.equal(null, err);
+
+    // All good!
+    console.log("Found following docs:");
+    console.log(fruits);
+    callback(fruits);
   });
 };
